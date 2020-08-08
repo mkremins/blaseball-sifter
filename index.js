@@ -282,6 +282,7 @@ function getGameOverCommentary(game) {
   var minutes = today.getUTCMinutes();
   let next_game_wait_time = 60 - minutes;
   gameOverComments.push(`The next game is expected to start in ${next_game_wait_time} minutes.`);
+  gameOverComments.push(`There are ${next_game_wait_time} minutes until the next game.`);
 
 
   // who won?
@@ -374,14 +375,18 @@ function getGameOverCommentary(game) {
 
 function getCommentary(game) {
   if (game.gameComplete) {
-    if (Math.random() < 0.1) {
+    if (Math.random() < 0.05) {
       return getCannedCommentary();
     }
-    else if (Math.random() < 0.2) {
+    else if (Math.random() < 0.1) {
       return getWeatherCommentary(game).split('weather is').join('weather was');
     }
     else {
-      return getGameOverCommentary(game);
+      if (Math.random() < 0.3) {
+         return `There are ${next_game_wait_time} minutes until the next game.`
+      } else if (Math.random() < 0.2) {
+         return getGameOverCommentary(game);
+      }
     }
   }
 
