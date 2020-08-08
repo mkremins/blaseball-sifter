@@ -48,10 +48,11 @@ function logAndSay(str) {
   const normalizedEditDistance = getNormalizedEditDistance(str, lastUtterance);
   //console.log(`[edit distance ${normalizedEditDistance}]`);
   if (normalizedEditDistance < 0.4) {
-    if(!(str.startsWith("ball") ||
-          str.startsWith("strike") ||
-          str.startsWith("Ball") ||
-          str.startsWith("Strike"))) { // strikes and balls are very repetitive by convention
+    if(!(str.startsWith("Foul") ||
+         str.startsWith("ball") ||
+         str.startsWith("strike") ||
+         str.startsWith("Ball") ||
+         str.startsWith("Strike"))) { // strikes and balls are very repetitive by convention
       console.log(`[skipping suspected duplicate utterance (${normalizedEditDistance}): ${str}]`);
       str = "How about that.";
    }
@@ -376,19 +377,27 @@ function getGameOverCommentary(game) {
 
 function getCommentary(game) {
   if (game.gameComplete) {
+    if (Math.random() < 0.8) {
+      if (Math.random() < 0.5) {
+         var today = new Date();
+         var minutes = today.getUTCMinutes();
+         let next_game_wait_time = 60 - minutes;
+         return `There are ${next_game_wait_time} minutes until the next game.`
+      }
+      if (Math.random() < 0.1) {
+         return getGameOverCommentary(game);
+      }
+      return ""; // less commentary between games
+   }
+
     if (Math.random() < 0.05) {
       return getCannedCommentary();
     }
     else if (Math.random() < 0.1) {
       return getWeatherCommentary(game).split('weather is').join('weather was');
-    }
-    else {
-      if (Math.random() < 0.3) {
-         return `There are ${next_game_wait_time} minutes until the next game.`
-      } else if (Math.random() < 0.2) {
-         return getGameOverCommentary(game);
-      }
-    }
+   } else {
+      return getGameOverCommentary(game);
+   }
   }
 
   if (Math.random() < 0.7) {
@@ -461,14 +470,39 @@ const updateRateSeconds = 1.8;
 const minSecondsBetweenSwitches = 60;//20
 const maxSecondsBetweenSwitches = 120;//30
 const chanceToSwitchPerSecond = 1/30;
-const commentaryRate = 0.3;
+const commentaryRate = 0.5;
 
+let timeOfLastSimDataGrab = 0;
+let simDataGrabInterval = 900;
 let secondsSinceLastSwitch = 0;
 let currentGameIdx = -1;
+
+let currentSeason = null;
+let currentDay = null;
 
 const lastUpdates = {};
 
 function updateGameData(season, day) {
+  let date_now = Date.now()
+  var today = new Date();
+  var minutes = today.getUTCMinutes();
+  let next_game_wait_time = 60 - minutes;
+  if ((date_now - timeOfLastSimDataGrab) > (simDataGrabInterval * 1000.0) ||
+      (next_game_wait_time < 5)) {
+     timeOfLastSimDataGrab = date_now;
+     getEndpoint('simulationData', {}, (data, err) => {
+        if(err) {
+           return; // panic, but not very much
+        }
+        const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
+        speak(seasonHeader);
+        currentDay = data.day;
+        currentSeason = data.season;
+     });
+  }
+  if(currentSeason) { season = currentSeason; }
+  if(currentDay) { day = currentDay; }
+
   secondsSinceLastSwitch += updateRateSeconds;
   getEndpoint('games', {season, day}, function(games, err) {
     // if there's an error, fail gracefully
@@ -502,8 +536,13 @@ function updateGameData(season, day) {
     }
     else {
       if (Math.random() < commentaryRate) {
-         const commentary = getCommentary(game);
-         speak(commentary);
+         try {
+            const commentary = getCommentary(game);
+            speak(commentary);
+         } catch(err) {
+            console.log(err);
+            speak("The Shard Is Watching");
+         }
       }
     }
   });
