@@ -16,12 +16,14 @@ function getEndpoint(endpoint, params, cb) {
   request({url}, function(err, res, body) {
     if (err) {
       cb(null, err);
-    } else {
+    }
+    else {
       try {
-         cb(JSON.parse(body));
-      } catch (except) {
-         console.log(except);
-         cb(null, except);
+        cb(JSON.parse(body));
+      }
+      catch (except) {
+        console.log(except);
+        cb(null, except);
       }
     }
   });
@@ -556,8 +558,6 @@ const maxSecondsBetweenSwitches = 120;//30
 const chanceToSwitchPerSecond = 1/30;
 const commentaryRate = 0.5;
 
-let timeOfLastSimDataGrab = 0;
-let simDataGrabInterval = 900;
 let secondsSinceLastSwitch = 0;
 let currentGameID = null;
 
@@ -566,31 +566,13 @@ let currentDay = null;
 
 const lastUpdates = {};
 
-function updateGameData(season, day) {
-  let date_now = Date.now()
-  var today = new Date();
-  var minutes = today.getUTCMinutes();
-  let next_game_wait_time = 60 - minutes;
-  if ((date_now - timeOfLastSimDataGrab) > (simDataGrabInterval * 1000.0) ||
-      (next_game_wait_time < 1.5) ||
-      ((next_game_wait_time > 59) && ((date_now - timeOfLastSimDataGrab) > (5.0 * 1000.0) ))) {
-     timeOfLastSimDataGrab = date_now;
-     getEndpoint('simulationData', {}, (data, err) => {
-        if(err) {
-           //return; // panic, but not very much
-        } else {
-        const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
-        speak(seasonHeader);
-        currentDay = data.day;
-        currentSeason = data.season;
-      }
-     });
-  }
-  if(currentSeason) { season = currentSeason; }
-  if(currentDay) { day = currentDay; }
-
+function updateGameData() {
   secondsSinceLastSwitch += updateRateSeconds;
-  getEndpoint('games', {season, day}, function(games, err) {
+  if (!currentSeason || !currentDay) {
+    console.log("⚠️ can't update game data: no current season or day");
+    return;
+  }
+  getEndpoint('games', {season: currentSeason, day: currentDay}, function(games, err) {
     // if there's an error, fail gracefully
     if (err) {
       // maybe reset switch state to force a switch to a new game when we go back online?
@@ -643,12 +625,21 @@ function updateGameData(season, day) {
   });
 }
 
-getEndpoint('simulationData', {}, function(data, err) {
-if (err) {
+function updateSimulationData() {
+  getEndpoint('simulationData', {}, function(data, err) {
+    if (err) {
+      console.log("⚠️ can't get simulation data");
       return;
-   }
-   const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
-   speak(seasonHeader);
-   setInterval(updateGameData, updateRateSeconds * 1000, data.season, data.day);
-   setInterval(pruneSpeechQueue, 20000);
-});
+    }
+    currentSeason = data.season;
+    currentDay = data.day;
+    const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
+    speak(seasonHeader);
+  });
+}
+
+// start up the loops and such
+updateSimulationData();
+setInterval(updateSimulationData, 1000 * 60);
+setInterval(updateGameData, updateRateSeconds * 1000);
+setInterval(pruneSpeechQueue, 20000);
