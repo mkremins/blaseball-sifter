@@ -288,7 +288,7 @@ function getGameOverCommentary(game) {
     gameOverComments.push(`Things might have gone differently if not for the ${getWeather(game)} weather.`);
     gameOverComments.push(`At least the weather wasn't ${randNth(allWeathers.filter(w => w !== getWeather(game)))}.`);
   }
-  if (Math.random() < 0.066) {
+  if (Math.random() < 0.166) {
     gameOverComments.push(baalgameCommentaryGrammar.flatten("#onetimepad#"));
   }
 
