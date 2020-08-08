@@ -47,7 +47,7 @@ function fixPronunciation(str) {
 function logAndSay(str) {
   const normalizedEditDistance = getNormalizedEditDistance(str, lastUtterance);
   //console.log(`[edit distance ${normalizedEditDistance}]`);
-  if (normalizedEditDistance < 0.4) {
+  if (normalizedEditDistance < 0.3) {
     if(!(str.startsWith("Foul") ||
          str.startsWith("ball") ||
          str.startsWith("strike") ||
@@ -61,7 +61,9 @@ function logAndSay(str) {
   // varying the speed keeps the voice more interesting
   let voice_speed = 0.8 + (Math.random() * 0.5);
   say.speak(fixPronunciation(str), voice, voice_speed, speakCallback);
-  lastUtterance = str;
+  if (str !== "") {
+    lastUtterance = str;
+  }
 }
 
 let lastUtterance = "";
@@ -314,7 +316,7 @@ function getGameOverCommentary(game) {
   let gameOverComments = [
     "This game is over."
   ];
-  if (Math.random() > 0.5) {
+  if (Math.random() < 0.4) {
     gameOverComments.push(`The ${getWeather(game)} weather might have influenced the outcome.`);
     gameOverComments.push(`Things might have gone differently if not for the ${getWeather(game)} weather.`);
     gameOverComments.push(`At least the weather wasn't ${randNth(allWeathers.filter(w => w !== getWeather(game)))}.`);
@@ -324,12 +326,13 @@ function getGameOverCommentary(game) {
   }
 
   // time until next game
-  if (Math.random() < 0.2) {
+  if (Math.random() < 0.1) {
     var today = new Date();
     var minutes = today.getUTCMinutes();
     let next_game_wait_time = 60 - minutes;
     gameOverComments.push(`The next game is expected to start in ${next_game_wait_time} minutes.`);
     gameOverComments.push(`There are ${next_game_wait_time} minutes until the next game.`);
+    gameOverComments.push(`The next game starts in ${next_game_wait_time} minutes.`);
   }
 
   // who won?
