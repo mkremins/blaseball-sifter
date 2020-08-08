@@ -17,7 +17,12 @@ function getEndpoint(endpoint, params, cb) {
     if (err) {
       cb(null, err);
     } else {
-      cb(JSON.parse(body));
+      try {
+         cb(JSON.parse(body));
+      } catch (except) {
+         console.log(except);
+         cb(null, except);
+      }
     }
   });
 }
@@ -572,12 +577,13 @@ function updateGameData(season, day) {
      timeOfLastSimDataGrab = date_now;
      getEndpoint('simulationData', {}, (data, err) => {
         if(err) {
-           return; // panic, but not very much
-        }
+           //return; // panic, but not very much
+        } else {
         const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
         speak(seasonHeader);
         currentDay = data.day;
         currentSeason = data.season;
+      }
      });
   }
   if(currentSeason) { season = currentSeason; }
@@ -637,9 +643,12 @@ function updateGameData(season, day) {
   });
 }
 
-getEndpoint('simulationData', {}, function(data) {
-  const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
-  speak(seasonHeader);
-  setInterval(updateGameData, updateRateSeconds * 1000, data.season, data.day);
-  setInterval(pruneSpeechQueue, 20000);
+getEndpoint('simulationData', {}, function(data, err) {
+if (err) {
+      return;
+   }
+   const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
+   speak(seasonHeader);
+   setInterval(updateGameData, updateRateSeconds * 1000, data.season, data.day);
+   setInterval(pruneSpeechQueue, 20000);
 });
