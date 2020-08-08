@@ -224,7 +224,7 @@ function getCannedCommentary() {
   if (Math.random() < 0.3) {
     return nickCommentaryGrammar.flatten("#origin#");
   }
-  if (Math.random() < 0.1) {
+  if (Math.random() < 0.24) {
     return baalgameCommentaryGrammar.flatten("#onetimepad#");
   }
   return cannedCommentaryGrammar.flatten("#origin#");
@@ -466,7 +466,7 @@ function getCommentary(game) {
   }
 }
 
-const updateRateSeconds = 1.8;
+const updateRateSeconds = 1.1;
 const minSecondsBetweenSwitches = 60;//20
 const maxSecondsBetweenSwitches = 120;//30
 const chanceToSwitchPerSecond = 1/30;
