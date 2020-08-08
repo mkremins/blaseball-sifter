@@ -455,35 +455,35 @@ function getCommentary(game) {
       isBlowout, isNailbiter
     } = getScoreState(game);
     // generic score comments
-    gameOverComments.push(`The ${winningTeam.name} are ahead ${score}`);
-    gameOverComments.push(`The ${winningTeam.nick} are ahead ${score}`);
+    possibleComments.push(`The ${winningTeam.name} are ahead ${score}`);
+    possibleComments.push(`The ${winningTeam.nick} are ahead ${score}`);
     // high-scoring and low-scoring games
     if (winningTeam.score > 9) {
-      gameOverComments.push(`This is a very high-scoring game.`)
+      possibleComments.push(`This is a very high-scoring game.`)
     }
     if (winningTeam.score > 9 && losingTeam.score > 7) {
-      gameOverComments.push(`Both teams have racked up exceptionally high scores.`);
+      possibleComments.push(`Both teams have racked up exceptionally high scores.`);
     }
     if (winningTeam.score < 4) {
-      gameOverComments.push(`This is a very low-scoring game so far.`);
+      possibleComments.push(`This is a very low-scoring game so far.`);
     }
     // blowouts and nailbiters
     if (isBlowout) {
       const absolutely = randNth(["absolutely", "completely", "utterly", "", "", "", ""]);
       const beat = randNth(["destroying", "demolishing", "eradicating", "routing", "smashing"]);
       const destroyed = absolutely + " " + beat;
-      gameOverComments.push(`The ${winningTeam.name} are ${destroyed} the ${losingTeam.name} ${maybeScore}`);
-      gameOverComments.push(`The ${winningTeam.nick} are ${destroyed} the ${losingTeam.nick} ${maybeScore}`);
-      gameOverComments.push("This isn't even close.");
-      gameOverComments.push("It isn't even close.");
-      gameOverComments.push("What a blowout!");
+      possibleComments.push(`The ${winningTeam.name} are ${destroyed} the ${losingTeam.name} ${maybeScore}`);
+      possibleComments.push(`The ${winningTeam.nick} are ${destroyed} the ${losingTeam.nick} ${maybeScore}`);
+      possibleComments.push("This isn't even close.");
+      possibleComments.push("It isn't even close.");
+      possibleComments.push("What a blowout!");
     }
     else if (isNailbiter) {
       const narrowly = randNth(["narrowly", "barely"]);
-      gameOverComments.push(`The ${winningTeam.name} are ${narrowly} ahead ${maybeScore}`);
-      gameOverComments.push("This is a close game.");
-      gameOverComments.push("What a nailbiter!");
-      gameOverComments.push("What a close game!");
+      possibleComments.push(`The ${winningTeam.name} are ${narrowly} ahead ${maybeScore}`);
+      possibleComments.push("This is a close game.");
+      possibleComments.push("What a nailbiter!");
+      possibleComments.push("What a close game!");
     }
 
 
@@ -613,7 +613,7 @@ function updateGameData(season, day) {
       const possibleNextGameIDs = possibleNextGames.map(game => game._id);
       currentGameID = randNth(possibleNextGameIDs);
     }
-    const game = games.find(game => game._id === currentGameID);
+    const game = games.find(game => game._id === currentGameID) || games[0];
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
     if (switchGame) {
       const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
