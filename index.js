@@ -24,7 +24,8 @@ function getEndpoint(endpoint, params, cb) {
 
 /// TTS stuff
 
-const voice = 'Alex';
+const voice = 'Microsoft Zira Desktop';
+
 
 function fixPronunciation(str) {
   if (!str) return ""; // fail gracefully if undefined
@@ -46,11 +47,17 @@ function logAndSay(str) {
   const normalizedEditDistance = getNormalizedEditDistance(str, lastUtterance);
   //console.log(`[edit distance ${normalizedEditDistance}]`);
   if (normalizedEditDistance < 0.4) {
-    console.log(`[skipping suspected duplicate utterance (${normalizedEditDistance}): ${str}]`);
-    str = "How about that.";
+    if(!(str.startsWith("ball") ||
+          str.startsWith("strike") ||
+          str.startsWith("Ball") ||
+          str.startsWith("Strike"))) { // strikes and balls are very repetitive by convention
+      console.log(`[skipping suspected duplicate utterance (${normalizedEditDistance}): ${str}]`);
+      str = "How about that.";
+   }
   }
   console.log(str);
-  say.speak(fixPronunciation(str), voice, 1.0, speakCallback);
+  let voice_speed = 0.9 + (Math.random() * 0.4);
+  say.speak(fixPronunciation(str), voice, voice_speed, speakCallback);
   lastUtterance = str;
 }
 
@@ -203,6 +210,13 @@ function getGameOverCommentary(game) {
     gameOverComments.push(`Things might have gone differently if not for the ${getWeather(game)} weather.`);
     gameOverComments.push(`At least the weather wasn't ${randNth(allWeathers.filter(w => w !== getWeather(game)))}.`);
   }
+
+  // time until next game
+  var today = new Date();
+  var minutes = today.getUTCMinutes();
+  let next_game_wait_time = 60 - minutes;
+  gameOverComments.push(`The next game is expected to start in ${next_game_wait_time} minutes.`);
+
 
   // who won?
   const homeWon = game.homeScore > game.awayScore;
@@ -421,7 +435,7 @@ function updateGameData(season, day) {
 }
 
 getEndpoint('simulationData', {}, function(data) {
-  const seasonHeader = `Season ${data.season}, Day ${data.day}`;
+  const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
   speak(seasonHeader);
   setInterval(updateGameData, updateRateSeconds * 1000, data.season, data.day);
   setInterval(clearSpeechQueue, 10000);
