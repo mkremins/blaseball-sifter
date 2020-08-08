@@ -488,7 +488,8 @@ function updateGameData(season, day) {
   var minutes = today.getUTCMinutes();
   let next_game_wait_time = 60 - minutes;
   if ((date_now - timeOfLastSimDataGrab) > (simDataGrabInterval * 1000.0) ||
-      (next_game_wait_time < 5)) {
+      (next_game_wait_time < 5) ||
+      ((next_game_wait_time > 58) && ((date_now - timeOfLastSimDataGrab) > (10.0 * 1000.0) ))) {
      timeOfLastSimDataGrab = date_now;
      getEndpoint('simulationData', {}, (data, err) => {
         if(err) {
