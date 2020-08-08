@@ -279,6 +279,37 @@ function getWeatherCommentary(game) {
   return `The weather is ${randNth(["still ","","","","","","",""])}${weather}.`;
 }
 
+function getScoreState(game) {
+  const homeWinning = game.homeScore > game.awayScore;
+  const homeTeam = {
+    name: game.homeTeamName,
+    nick: game.homeTeamNickname,
+    score: game.homeScore,
+    batter: game.homeBatterName,
+    pitcher: game.homePitcherName
+  };
+  const awayTeam = {
+    name: game.awayTeamName,
+    nick: game.awayTeamNickname,
+    score: game.awayScore,
+    batter: game.awayBatterName,
+    pitcher: game.awayPitcherName
+  };
+  const [winningTeam, losingTeam] = homeWinning ? [homeTeam, awayTeam] : [awayTeam, homeTeam];
+  const scoreDifference = Math.abs(game.homeScore - game.awayScore);
+  const score = `${winningTeam.score} to ${losingTeam.score}`;
+  const maybeScore = randNth([score,""]);
+  const inverseScore = `${losingTeam.score} to ${winningTeam.score}`;
+  const maybeInverseScore = randNth([inverseScore, ""]);
+  const isBlowout = scoreDifference > 3;
+  const isNailbiter = scoreDifference < 3;
+  return {
+    winningTeam, losingTeam, scoreDifference,
+    score, maybeScore, inverseScore, maybeInverseScore,
+    isBlowout, isNailbiter
+  };
+}
+
 function getGameOverCommentary(game) {
   let gameOverComments = [
     "This game is over."
@@ -302,29 +333,11 @@ function getGameOverCommentary(game) {
   }
 
   // who won?
-  const homeWon = game.homeScore > game.awayScore;
-  const homeTeam = {
-    name: game.homeTeamName,
-    nick: game.homeTeamNickname,
-    score: game.homeScore,
-    batter: game.homeBatterName,
-    pitcher: game.homePitcherName
-  };
-  const awayTeam = {
-    name: game.awayTeamName,
-    nick: game.awayTeamNickname,
-    score: game.awayScore,
-    batter: game.awayBatterName,
-    pitcher: game.awayPitcherName
-  };
-  const [winningTeam, losingTeam] = homeWon ? [homeTeam, awayTeam] : [awayTeam, homeTeam];
-
-  // score info
-  const scoreDifference = Math.abs(game.homeScore - game.awayScore);
-  const score = `${winningTeam.score} to ${losingTeam.score}`;
-  const maybeScore = randNth([score,""]);
-  const inverseScore = `${losingTeam.score} to ${winningTeam.score}`;
-  const maybeInverseScore = randNth([inverseScore, ""]);
+  const {
+    winningTeam, losingTeam, scoreDifference,
+    score, maybeScore, inverseScore, maybeInverseScore,
+    isBlowout, isNailbiter
+  } = getScoreState(game);
 
   // generic remarks
   gameOverComments.push(`The ${winningTeam.name} beat the ${losingTeam.name} ${maybeScore}.`);
@@ -343,7 +356,7 @@ function getGameOverCommentary(game) {
   if (Math.random() > 0.5) gameOverComments.push(`The ${losingTeam.name} lost.`);
 
   // blowouts and nailbiters
-  if (scoreDifference > 3) {
+  if (isBlowout) {
     const absolutely = randNth(["absolutely", "completely", "utterly", "", "", "", ""]);
     const beat = randNth(["destroyed", "demolished", "eradicated", "routed", "smashed"]);
     const destroyed = absolutely + " " + beat;
@@ -352,7 +365,7 @@ function getGameOverCommentary(game) {
     gameOverComments.push("It wasn't even close.");
     gameOverComments.push("What a blowout!");
   }
-  else if (scoreDifference < 3) {
+  else if (isNailbiter) {
     const narrowly = randNth(["narrowly", "barely"]);
     const beat = randNth(["beat", "eked out a win over", "eked out victory over", "pulled out a win against"]);
     const narrowlyBeat = narrowly + " " + beat;
@@ -432,12 +445,51 @@ function getCommentary(game) {
       getWeatherCommentary(game)
     ];
 
+    // score comments
+    const {
+      winningTeam, losingTeam, scoreDifference,
+      score, maybeScore, inverseScore, maybeInverseScore,
+      isBlowout, isNailbiter
+    } = getScoreState(game);
+    // generic score comments
+    gameOverComments.push(`The ${winningTeam.name} are ahead ${score}`);
+    gameOverComments.push(`The ${winningTeam.nick} are ahead ${score}`);
+    // high-scoring and low-scoring games
+    if (winningTeam.score > 9) {
+      gameOverComments.push(`This is a very high-scoring game.`)
+    }
+    if (winningTeam.score > 9 && losingTeam.score > 7) {
+      gameOverComments.push(`Both teams have racked up exceptionally high scores.`);
+    }
+    if (winningTeam.score < 4) {
+      gameOverComments.push(`This is a very low-scoring game so far.`);
+    }
+    // blowouts and nailbiters
+    if (isBlowout) {
+      const absolutely = randNth(["absolutely", "completely", "utterly", "", "", "", ""]);
+      const beat = randNth(["destroying", "demolishing", "eradicating", "routing", "smashing"]);
+      const destroyed = absolutely + " " + beat;
+      gameOverComments.push(`The ${winningTeam.name} are ${destroyed} the ${losingTeam.name} ${maybeScore}`);
+      gameOverComments.push(`The ${winningTeam.nick} are ${destroyed} the ${losingTeam.nick} ${maybeScore}`);
+      gameOverComments.push("This isn't even close.");
+      gameOverComments.push("It isn't even close.");
+      gameOverComments.push("What a blowout!");
+    }
+    else if (isNailbiter) {
+      const narrowly = randNth(["narrowly", "barely"]);
+      gameOverComments.push(`The ${winningTeam.name} are ${narrowly} ahead ${maybeScore}`);
+      gameOverComments.push("This is a close game.");
+      gameOverComments.push("What a nailbiter!");
+      gameOverComments.push("What a close game!");
+    }
+
+
     // comments on the base state
     const basesState = getBasesState(game);
     const baseStateCommentary = getBaseStateCommentary(game, basesState);
     possibleComments.push(baseStateCommentary);
     const numBasesOccupied = basesState.filter(it => it).length;
-    for (let i = 0; i < numBasesOccupied; i++) {
+    for (let i = 0; i < numBasesOccupied * 2; i++) {
       possibleComments.push(baseStateCommentary); // higher weight the more bases have runners on them
     }
 
@@ -446,19 +498,27 @@ function getCommentary(game) {
       possibleComments = possibleComments.concat([
         `${randNth(["It is the","It's the",""])} top of the ${game.inning+1}th.`,
         `${game.homePitcherName} is pitching for the ${randNth([game.homeTeamNickname, game.homeTeamName])}.`,
-        `${game.awayBatterName || "Nobody"} is batting for the ${randNth([game.awayTeamNickname, game.awayTeamName])}.`,
-        `${game.homePitcherName} ${randNth(["is",""])} on the mound.`,
-        `${game.awayBatterName || "Nobody"} ${randNth(["is",""])} at bat.`
+        `${game.homePitcherName} ${randNth(["is",""])} on the mound.`
       ]);
+      if (game.awayBatterName) {
+        possibleComments = possibleComments.concat([
+          `${game.awayBatterName} is batting for the ${randNth([game.awayTeamNickname, game.awayTeamName])}.`,
+          `${game.awayBatterName} ${randNth(["is",""])} at bat.`
+        ]);
+      }
     }
     else {
       possibleComments = possibleComments.concat([
         `${randNth(["It is the","it's the",""])} bottom of the ${game.inning+1}th.`,
         `${game.awayPitcherName} is pitching for the ${randNth([game.awayTeamNickname, game.awayTeamName])}.`,
-        `${game.homeBatterName || "Nobody"} is batting for the ${randNth([game.homeTeamNickname, game.homeTeamName])}.`,
-        `${game.awayPitcherName} ${randNth(["is",""])} on the mound.`,
-        `${game.homeBatterName || "Nobody"} ${randNth(["is",""])} at bat.`
+        `${game.awayPitcherName} ${randNth(["is",""])} on the mound.`
       ]);
+      if (game.homeBatterName) {
+        possibleComments = possibleComments.concat([
+          `${game.homeBatterName} is batting for the ${randNth([game.homeTeamNickname, game.homeTeamName])}.`,
+          `${game.homeBatterName} ${randNth(["is",""])} at bat.`
+        ]);
+      }
     }
 
     // comments on the shame state
@@ -491,7 +551,7 @@ const commentaryRate = 0.5;
 let timeOfLastSimDataGrab = 0;
 let simDataGrabInterval = 900;
 let secondsSinceLastSwitch = 0;
-let currentGameIdx = -1;
+let currentGameID = null;
 
 let currentSeason = null;
 let currentDay = null;
@@ -526,7 +586,7 @@ function updateGameData(season, day) {
     if (err) {
       // maybe reset switch state to force a switch to a new game when we go back online?
       //secondsSinceLastSwitch = 0;
-      //currentGameIdx = -1;
+      //currentGameID = null;
       // for now, as a stopgap, say something random that doesn't depend on game state
       speak(getCannedCommentary());
       return;
@@ -534,14 +594,23 @@ function updateGameData(season, day) {
 
     // otherwise assume we've got the game data and go ahead
     const okToSwitch = secondsSinceLastSwitch > minSecondsBetweenSwitches;
-    const mustSwitch = currentGameIdx === -1 || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
+    const mustSwitch = currentGameID === null || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
     const switchGame = mustSwitch || (okToSwitch && (Math.random() < chanceToSwitchPerSecond));
+    let possibleNextGames = games;
     if (switchGame) {
+      console.log("SWITCHING TEAMS");
+      let possibleNextGames = games;
+      if (!games.every(game => game.gameComplete)) {
+        possibleNextGames = possibleNextGames.filter(game => !game.gameComplete);
+      }
+      if (possibleNextGames.length > 1) {
+        possibleNextGames = possibleNextGames.filter(game => game._id !== currentGameID);
+      }
       secondsSinceLastSwitch = 0;
-      const possibleNextGameIdxs = Object.keys(games).filter(idx => idx !== ''+currentGameIdx);
-      currentGameIdx = parseInt(randNth(possibleNextGameIdxs), 10);
+      const possibleNextGameIDs = possibleNextGames.map(game => game._id);
+      currentGameID = randNth(possibleNextGameIDs);
     }
-    const game = games[currentGameIdx];
+    const game = games.find(game => game._id === currentGameID);
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
     if (switchGame) {
       const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
