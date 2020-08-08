@@ -25,6 +25,7 @@ function getEndpoint(endpoint, params, cb) {
 /// TTS stuff
 
 const voice = 'Microsoft Zira Desktop';
+const color_commentary_voice = 'Microsoft Zira Desktop';
 
 
 function fixPronunciation(str) {
@@ -456,10 +457,11 @@ function getCommentary(game) {
   }
 }
 
-const updateRateSeconds = 1;
+const updateRateSeconds = 1.8;
 const minSecondsBetweenSwitches = 60;//20
 const maxSecondsBetweenSwitches = 120;//30
 const chanceToSwitchPerSecond = 1/30;
+const commentaryRate = 0.3;
 
 let secondsSinceLastSwitch = 0;
 let currentGameIdx = -1;
@@ -499,8 +501,10 @@ function updateGameData(season, day) {
       lastUpdates[game._id] = game.lastUpdate;
     }
     else {
-      const commentary = getCommentary(game);
-      speak(commentary);
+      if (Math.random() < commentaryRate) {
+         const commentary = getCommentary(game);
+         speak(commentary);
+      }
     }
   });
 }
