@@ -165,7 +165,7 @@ const nickCommentaryGrammar = tracery.createGrammar({
   ],
   "descriptor":["unbelievable", "so evenly matched", "so splortsperson like"],
   "relationship":[
-    "respect", "have no respect for", "fear", "loath", "are disrespecting", "love", "are in awe of",
+    "respect", "have no respect for", "fear", "loathe", "are disrespecting", "love", "are in awe of",
     "are cowering in front of", "are cowering in the face of", "not taking any guff from", "are worried about",
     "have no fear of", "have been shamed by", "are living up to", "are going against", "are surpassing"
   ],
