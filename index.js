@@ -31,9 +31,17 @@ function getEndpoint(endpoint, params, cb) {
 
 /// TTS stuff
 
-const voice = 'Microsoft Zira Desktop';
-const color_commentary_voice = 'Microsoft Zira Desktop';
-
+let voiceToUse = null;
+if (process.platform === "darwin") {
+  voiceToUse = "Alex";
+}
+else if (process.platform === "win32") {
+  voiceToUse = "Microsoft Zira Desktop";
+}
+else { // probably we're on Linux then?
+  voiceToUse = "voice_cmu_us_slt_arctic_hts";
+}
+const voice = voiceToUse;
 
 function fixPronunciation(str) {
   if (!str) return ""; // fail gracefully if undefined
