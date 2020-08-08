@@ -8,7 +8,8 @@
   },
   "author": "Max Kreminski",
   "contributors": [
-    "Isaac Karth"
+    "Isaac Karth",
+    "Nick Junius"
   ],
   "dependencies": {
     "datascript": "^1.0.0",
