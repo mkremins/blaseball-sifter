@@ -1,6 +1,7 @@
 const datascript = require('datascript');
 const request = require('request');
 const say = require('say');
+const tracery = require('tracery-grammar');
 
 /// ad-hoc blaseball API
 
@@ -21,7 +22,7 @@ function getEndpoint(endpoint, params, cb) {
 const voice = 'Alex';
 
 function fixPronunciation(str) {
-  return str.split('blaseball').join('blayce ball');
+  return str.toLowerCase().split('blaseball').join('blayce ball');
 }
 
 function logAndSay(str) {
@@ -61,6 +62,29 @@ function randNth(items){
 
 const appDB = datascript.empty_db({});
 
+const cannedCommentaryGrammar = tracery.createGrammar({
+  "blaseball": ["blaseball", "blaseball", "blaseball", "blaseball", "blasé ball"],
+  "subject": ["#blaseball#", "#other_subject#",],
+  "other_subject": [
+    "#blaseball#", "The Tim Tebow CFL Chronicles", "#blaseball#", "The Hades Tigers", "The Commissioner",
+    "The Hellmouth Sunbeams", "The Canada Moist Talkers", "The Houston Spies"
+  ],
+  "obj": ["is the sport of #kings#", "brings together all of the #kings#", "is for #kings#", "is doing a good job"],
+  "kings": [
+    "kings", "umpires", "vampires", "people", "masses", "pyromaniacs", "lovers", "shoe thieves", "gamblers",
+    "streamers", "bloggers", "kids"
+  ],
+  "sentence": ["#subject# #obj#."],
+  "oneoff": [
+    "we are all love #blaseball#"
+  ],
+  "origin": ["#sentence#", "#sentence#", "#sentence#", "#oneoff#"]
+});
+
+function getCommentary(game) {
+  return cannedCommentaryGrammar.flatten("#origin#");
+}
+
 const lastUpdates = {};
 
 function updateGameData(season, day) {
@@ -73,7 +97,8 @@ function updateGameData(season, day) {
       lastUpdates[game._id] = game.lastUpdate;
     }
     else {
-      speak(fixPronunciation('blaseball'));
+      const commentary = getCommentary(game);
+      speak(commentary);
     }
   });
 }

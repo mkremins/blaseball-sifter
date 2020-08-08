@@ -13,6 +13,7 @@
   "dependencies": {
     "datascript": "^1.0.0",
     "request": "^2.88.2",
-    "say": "^0.16.0"
+    "say": "^0.16.0",
+    "tracery-grammar": "^2.7.4"
   }
 }
