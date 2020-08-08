@@ -224,7 +224,7 @@ function getCannedCommentary() {
   if (Math.random() < 0.3) {
     return nickCommentaryGrammar.flatten("#origin#");
   }
-  if (Math.random() < 0.24) {
+  if (Math.random() < 0.066) {
     return baalgameCommentaryGrammar.flatten("#onetimepad#");
   }
   return cannedCommentaryGrammar.flatten("#origin#");
@@ -277,6 +277,9 @@ function getGameOverCommentary(game) {
     gameOverComments.push(`The ${getWeather(game)} weather might have influenced the outcome.`);
     gameOverComments.push(`Things might have gone differently if not for the ${getWeather(game)} weather.`);
     gameOverComments.push(`At least the weather wasn't ${randNth(allWeathers.filter(w => w !== getWeather(game)))}.`);
+  }
+  if (Math.random() < 0.066) {
+    gameOverComments.push(baalgameCommentaryGrammar.flatten("#onetimepad#"));
   }
 
   // time until next game
