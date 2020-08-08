@@ -93,6 +93,16 @@ function clearSpeechQueue() {
   }
 }
 
+function pruneSpeechQueue() {
+  // we don't want to accidentally clear utterances about switching teams,
+  // so let's leave the first two messages intact on periodic clear for now.
+  // (switching teams always clears the queue completely)
+  console.log(`[pruning speech queue at length ${speechQueue.length}]`);
+  while(speechQueue.length > 2) {
+    speechQueue.pop();
+  }
+}
+
 function speakHighPriority(str) {
   clearSpeechQueue();
   speak(str);
@@ -283,12 +293,13 @@ function getGameOverCommentary(game) {
   }
 
   // time until next game
-  var today = new Date();
-  var minutes = today.getUTCMinutes();
-  let next_game_wait_time = 60 - minutes;
-  gameOverComments.push(`The next game is expected to start in ${next_game_wait_time} minutes.`);
-  gameOverComments.push(`There are ${next_game_wait_time} minutes until the next game.`);
-
+  if (Math.random() < 0.2) {
+    var today = new Date();
+    var minutes = today.getUTCMinutes();
+    let next_game_wait_time = 60 - minutes;
+    gameOverComments.push(`The next game is expected to start in ${next_game_wait_time} minutes.`);
+    gameOverComments.push(`There are ${next_game_wait_time} minutes until the next game.`);
+  }
 
   // who won?
   const homeWon = game.homeScore > game.awayScore;
@@ -378,29 +389,31 @@ function getGameOverCommentary(game) {
   return randNth(gameOverComments);
 }
 
+function getBetweenGamesCommentary(game) {
+  const chance = Math.random();
+  if (chance < 0.2) {
+    return ""; // less commentary between games
+  }
+  else if (chance < 0.5) {
+    return getGameOverCommentary(game);
+  }
+  else if (chance < 0.7) {
+    var today = new Date();
+    var minutes = today.getUTCMinutes();
+    let next_game_wait_time = 60 - minutes;
+    return `There are ${next_game_wait_time} minutes until the next game.`;
+  }
+  else if (chance < 0.95) {
+    return getWeatherCommentary(game).split('weather is').join('weather was');
+  }
+  else {
+    return getCannedCommentary();
+  }
+}
+
 function getCommentary(game) {
   if (game.gameComplete) {
-    if (Math.random() < 0.8) {
-      if (Math.random() < 0.5) {
-         var today = new Date();
-         var minutes = today.getUTCMinutes();
-         let next_game_wait_time = 60 - minutes;
-         return `There are ${next_game_wait_time} minutes until the next game.`
-      }
-      if (Math.random() < 0.1) {
-         return getGameOverCommentary(game);
-      }
-      return ""; // less commentary between games
-   }
-
-    if (Math.random() < 0.05) {
-      return getCannedCommentary();
-    }
-    else if (Math.random() < 0.1) {
-      return getWeatherCommentary(game).split('weather is').join('weather was');
-   } else {
-      return getGameOverCommentary(game);
-   }
+    return getBetweenGamesCommentary(game);
   }
 
   if (Math.random() < 0.7) {
@@ -531,7 +544,7 @@ function updateGameData(season, day) {
     const game = games[currentGameIdx];
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
     if (switchGame) {
-      const prefix = randNth(['We go now to the', 'Now over to the', 'Over to the']);
+      const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
       speakHighPriority(`${prefix} ${title}.`);
     }
     if (game.lastUpdate !== lastUpdates[game._id]) {
@@ -556,5 +569,5 @@ getEndpoint('simulationData', {}, function(data) {
   const seasonHeader = `Season ${data.season + 1}, Day ${data.day + 1}`;
   speak(seasonHeader);
   setInterval(updateGameData, updateRateSeconds * 1000, data.season, data.day);
-  setInterval(clearSpeechQueue, 10000);
+  setInterval(pruneSpeechQueue, 20000);
 });
