@@ -428,7 +428,7 @@ function getCommentary(game) {
     // comments on the inning state
     if (game.topOfInning) {
       possibleComments = possibleComments.concat([
-        `${randNth(["It is the","It's the",""])} top of the ${game.inning}th.`,
+        `${randNth(["It is the","It's the",""])} top of the ${game.inning+1}th.`,
         `${game.homePitcherName} is pitching for the ${randNth([game.homeTeamNickname, game.homeTeamName])}.`,
         `${game.awayBatterName || "Nobody"} is batting for the ${randNth([game.awayTeamNickname, game.awayTeamName])}.`,
         `${game.homePitcherName} ${randNth(["is",""])} on the mound.`,
@@ -437,7 +437,7 @@ function getCommentary(game) {
     }
     else {
       possibleComments = possibleComments.concat([
-        `${randNth(["It is the","it's the",""])} bottom of the ${game.inning}th.`,
+        `${randNth(["It is the","it's the",""])} bottom of the ${game.inning+1}th.`,
         `${game.awayPitcherName} is pitching for the ${randNth([game.awayTeamNickname, game.awayTeamName])}.`,
         `${game.homeBatterName || "Nobody"} is batting for the ${randNth([game.homeTeamNickname, game.homeTeamName])}.`,
         `${game.awayPitcherName} ${randNth(["is",""])} on the mound.`,
