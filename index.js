@@ -159,18 +159,18 @@ const nickCommentaryGrammar = tracery.createGrammar({
 });
 
 const baalgameCommentaryGrammar = tracery.createGrammar({
-     phonetics : ["alpha", "bravo", "charlie", "delta", "echo",
+     "phonetics" : ["alpha", "bravo", "charlie", "delta", "echo",
      "foxtrot", "golf", "hotel", "india", "juliet", "kilo",
      "lima", "mike", "november", "oscar", "papa", "quebec",
      "romeo", "sierra", "tango", "uniform", "victor", "whiskey",
      "x-ray", "yankee", "zulu"],
-     phoneticsnum : ["alpha", "bravo", "charlie", "delta", "echo",
+     "phoneticsnum" : ["alpha", "bravo", "charlie", "delta", "echo",
      "foxtrot", "golf", "hotel", "india", "juliet", "kilo",
      "lima", "mike", "november", "oscar", "papa", "quebec",
      "romeo", "sierra", "tango", "uniform", "victor", "whiskey",
      "x-ray", "yankee", "zulu", "one", "two", "three", "four",
      "five", "six", "seven", "eight", "nine", "zero"],
-     polishstyle : ["alpha", "bravo", "charlie", "delta", "echo",
+     "polishstyle" : ["alpha", "bravo", "charlie", "delta", "echo",
      "foxtrot", "golf", "hotel", "india", "juliet", "kilo",
      "lima", "mike", "november", "oscar", "papa", "quebec",
      "romeo", "sierra", "tango", "uniform", "victor", "whiskey",
@@ -179,52 +179,52 @@ const baalgameCommentaryGrammar = tracery.createGrammar({
      "oblique", "oblique", "oblique", "oblique", "oblique", "oblique",
      "one", "two", "three", "four", "five", "six", "seven", "eight",
      "nine", "zero"],
-     decimal : ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
-     hexadecimal : ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "alpha", "bravo", "charlie", "delta", "echo", "foxtrot"],
-     teams : ["san francisco lovers", "dallas steaks", "kansas city breath mints",
+     "decimal" : ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
+     "hexadecimal" : ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "alpha", "bravo", "charlie", "delta", "echo", "foxtrot"],
+     "teams" : ["san francisco lovers", "dallas steaks", "kansas city breath mints",
      "los angeles tacos", "chicago firefighters", "hades tigers", "philly pies",
      "baltimore crabs", "mexico city wild wings", "hellmouth", "new york millennials",
      "charleston shoe thieves", "yellowstone magic", "hawaii fridays",
      "boston flowers", "canada moist talkers", "breckenridge jazz hands",
      "houston spies", "seattle garages", "miami dale"],
-     places : ["san francisco", "dallas", "kansas city",
+     "places" : ["san francisco", "dallas", "kansas city",
      "los angeles", "chicago", "hades", "philly",
      "baltimore", "mexico city", "the hellmouth", "new york",
      "charleston", "yellowstone", "hawaii",
      "boston", "canada", "breckenridge",
      "houston", "seattle", "miami"],
-     two : ["#phonetics#. #phonetics#", "#phoneticsnum#. #phoneticsnum#.", "#polishstyle#. #polishstyle#.", "#decimal#. #decimal#.", "#hexadecimal#. #hexadecimal#."],
-     four : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#.",
+     "two" : ["#phonetics#. #phonetics#", "#phoneticsnum#. #phoneticsnum#.", "#polishstyle#. #polishstyle#.", "#decimal#. #decimal#.", "#hexadecimal#. #hexadecimal#."],
+     "four" : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#.",
      "#phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#.",
      "#polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#.",
      "#decimal#. #decimal#. #decimal#. #decimal#.",
      "#hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#."],
-     eight : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#.",
+     "eight" : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#.",
      "#phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#.",
      "#polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#.",
      "#decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#.",
      "#hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#."],
-     twelve : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#.",
+     "twelve" : ["#phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#. #phonetics#.",
      "#phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#. #phoneticsnum#.",
      "#polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#. #polishstyle#.",
      "#decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#. #decimal#.",
      "#hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#. #hexadecimal#."],
-     planets : ["mercury", "venus", "mars", "jupiter", "saturn", "neptune", "uranus", "pluto", "chiron", "planet x", "nibiru"],
-     zodiac : ["aries", "cancer", "sagittarius", "libra", "virgo", "leo", "capricorn", "aquarius", "pisces", "taurus", "gemini", "scorpio"],
-     court : ["page", "knight", "queen", "king", "jack", "knave", "bishop", "pawn", "rook"],
-     suit : ["coins", "cups", "swords", "wands", "diamonds", "hearts", "clubs", "spades"],
-     operative : ["#planets# in #zodiac#", "the #court# of #suit#"],
-     greeting : ["For our friends in #places#", "For our siblings in #places#",
+     "planets" : ["mercury", "venus", "mars", "jupiter", "saturn", "neptune", "uranus", "pluto", "chiron", "planet x", "nibiru"],
+     "zodiac" : ["aries", "cancer", "sagittarius", "libra", "virgo", "leo", "capricorn", "aquarius", "pisces", "taurus", "gemini", "scorpio"],
+     "court" : ["page", "knight", "queen", "king", "jack", "knave", "bishop", "pawn", "rook"],
+     "suit" : ["coins", "cups", "swords", "wands", "diamonds", "hearts", "clubs", "spades"],
+     "operative" : ["#planets# in #zodiac#", "the #court# of #suit#"],
+     "greeting" : ["For our friends in #places#", "For our siblings in #places#",
      "For those supporting the #teams#", "If anyone is left in #places#", "This is not a drill", "#operative#:, do not answer",
      "For #operative#"],
-     onetimepad : ["#greeting#: #eight#", "#greeting#: #twelve#", "#greeting#: #four# Authentication #two#"]
+     "onetimepad" : ["#greeting#: #eight#", "#greeting#: #twelve#", "#greeting#: #four# Authentication #two#"]
    });
 
 function getCannedCommentary() {
   if (Math.random() < 0.3) {
     return nickCommentaryGrammar.flatten("#origin#");
   }
-  if (Math.random() < 0.05) {
+  if (Math.random() < 0.1) {
     return baalgameCommentaryGrammar.flatten("#onetimepad#");
   }
   return cannedCommentaryGrammar.flatten("#origin#");
@@ -488,8 +488,8 @@ function updateGameData(season, day) {
   var minutes = today.getUTCMinutes();
   let next_game_wait_time = 60 - minutes;
   if ((date_now - timeOfLastSimDataGrab) > (simDataGrabInterval * 1000.0) ||
-      (next_game_wait_time < 5) ||
-      ((next_game_wait_time > 58) && ((date_now - timeOfLastSimDataGrab) > (10.0 * 1000.0) ))) {
+      (next_game_wait_time < 1.5) ||
+      ((next_game_wait_time > 59) && ((date_now - timeOfLastSimDataGrab) > (5.0 * 1000.0) ))) {
      timeOfLastSimDataGrab = date_now;
      getEndpoint('simulationData', {}, (data, err) => {
         if(err) {
