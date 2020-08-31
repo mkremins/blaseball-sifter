@@ -22,7 +22,7 @@ function getEndpoint(endpoint, params, cb) {
         cb(JSON.parse(body));
       }
       catch (except) {
-        console.log(except);
+        //console.log(except);
         cb(null, except);
       }
     }
@@ -623,7 +623,7 @@ const lastUpdates = {};
 
 function updateGameData() {
   secondsSinceLastSwitch += updateRateSeconds;
-  if (!currentSeason || !currentDay) {
+  if ( currentSeason === null || currentDay === null) {
     console.log("⚠️ can't update game data: no current season or day");
     return;
   }
