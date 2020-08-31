@@ -288,7 +288,7 @@ const blaseballadsGrammar = tracery.createGrammar({
   });
 
 function getCannedCommentary() {
-  if (Math.random() < 0.12) {
+  if (Math.random() < 0.5) {
     return blaseballadsGrammar.flatten("#blaseballads#");
   }
   if (Math.random() < 0.3) {
@@ -382,7 +382,7 @@ function getGameOverCommentary(game) {
   if (Math.random() < 0.166) {
     gameOverComments.push(baalgameCommentaryGrammar.flatten("#onetimepad#"));
   }
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.8) {
     gameOverComments.push(blaseballadsGrammar.flatten("#blaseballads#"));
   }
 
