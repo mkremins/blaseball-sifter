@@ -1,0 +1,26 @@
+{
+  "blaseball": ["blaseball", "blaseball", "blaseball", "blaseball", "blasé ball", "blaze ball"],
+  "subject": ["#blaseball#", "#other_subject#",],
+  "other_subject": [
+    "#blaseball#", "The Tim Tebow CFL Chronicles", "#blaseball#", "The Hades Tigers", "The Commissioner",
+    "The Hellmouth Sunbeams", "The Canada Moist Talkers", "The Houston Spies", "Jon Bois"
+  ],
+  "obj": ["is the sport of #kings#", "brings together all of the #kings#", "is for #kings#", "is doing a good job"],
+  "kings": [
+    "kings", "umpires", "vampires", "people", "masses", "pyromaniacs", "lovers", "shoe thieves", "gamblers",
+    "streamers", "bloggers", "kids"
+  ],
+  "sentence": ["#subject# #obj#"],
+  "question": ["Did you know that #sentence#?"],
+  "oneoff": [
+    "We are all love #blaseball#"
+  ],
+  "origin": [
+    "#sentence#", "#sentence#", "#sentence#",
+    "#question#",
+    "#oneoff#",
+    "Check out twitch.tv/blaseball_radio for commentary by humans.",
+    "Check out twitch.tv/blaseball_radio for human-driven commentary.",
+    "You're listening to Radio Free Blaseball."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "origin":["#line#"],
+  "line":[
+    "#teamcommentary#", "#teamcommentary#", "#teamcommentary#", "#teamcommentary#",
+    "#teamcommentary#", "#teamcommentary#", "#teamcommentary#", "#teamcommentary#",
+    "#teamcommentary#", "#teamcommentary#",
+    "I can't believe what I'm watching", "This is getting intense",
+    "In this processor we love and respect the shard", "Let us enjoy the game comrades",
+    "Praise the solar eclipse"
+  ],
+  "teamcommentary":[
+    "These teams are #descriptor#", "These teams #relationship# #whoinrelationship#",
+    "These teams really #relationship# #whoinrelationship#", "These teams #relationship# #whoinrelationship#",
+    "These teams really #relationship# #whoinrelationship#", "These teams #relationship# #whoinrelationship#",
+    "These teams really #relationship# #whoinrelationship#"
+  ],
+  "descriptor":["unbelievable", "so evenly matched", "so splortsperson like"],
+  "relationship":[
+    "respect", "have no respect for", "fear", "loathe", "are disrespecting", "love", "are in awe of",
+    "are cowering in front of", "are cowering in the face of", "are not taking any guff from", "are worried about",
+    "have no fear of", "have been shamed by", "are living up to", "are going against", "are surpassing"
+  ],
+  "whoinrelationship":[
+    "each other", "themselves", "their opponents", "the crew", "the umpires", "the birds", "the peanuts",
+    "the weather", "the possibility of incineration", "Jessica Telephone's stats", "their own records",
+    "their opponents' records", "the rogue umpires", "peanut allergies", "bird talons", "the Discipline Era",
+    "the current standings", "the fourth strike"
+  ]
+}
