@@ -1,9 +1,9 @@
 {
-    intros : ["We are not proud to be sponsored by",
+    "intros" : ["We are not proud to be sponsored by",
               "We regret being sponsored by",
               "Please support us so we won't be sponsored by",
               "This broadcast is unfortunately sponsored by"],
-    companies : ["the Ghost Train. Ghost Train. Faster than the Styx.",
+    "companies" : ["the Ghost Train. Ghost Train. Faster than the Styx.",
                 "hornets. Hornets. Like peanuts with wings.",
                 "Sommerland Incineration Insurance. Sommerland. Wouldn't it be a shame?",
                 "Toaster Strudel. Toaster Strudel. We're warm inside too.",
@@ -34,5 +34,5 @@
                 "Mountain Dew. Mountain Dew. First colonized planet in the Pepsi Universe.",
                 "Blue Apron. Blue Apron. Your kitchen doesn't care about you, but we do.",
                 "the Yellowstone Supervolcano. Yellowstone. Inevitable."],
-    blaseballads : ["#intros# #companies#"]
+    "blaseballads" : ["#intros# #companies#"]
   }
