@@ -247,7 +247,7 @@ const baalgameCommentaryGrammar = tracery.createGrammar({
      "For #operative#"],
      "onetimepad" : ["#greeting#: #eight#", "#greeting#: #twelve#", "#greeting#: #four# Authentication #two#"]
    });
-   
+
 const blaseballadsGrammar = tracery.createGrammar({
     intros : ["We are not proud to be sponsored by",
               "We regret being sponsored by",
@@ -284,7 +284,7 @@ const blaseballadsGrammar = tracery.createGrammar({
                 "Mountain Dew. Mountain Dew. First colonized planet in the Pepsi Universe.",
                 "Blue Apron. Blue Apron. Your kitchen doesn't care about you, but we do.",
                 "the Yellowstone Supervolcano. Yellowstone. Inevitable."],
-    blaseballads : ["#intros# #companies#"] 
+    blaseballads : ["#intros# #companies#"]
   });
 
 function getCannedCommentary() {
@@ -306,7 +306,8 @@ function getBasesState(game) {
 
 const allWeathers = [
   "Void", "Sunny", "Overcast", "Rainy", "Sandstorm", "Snowy", "Acidic",
-  "Solar Eclipse", "Glitter", "Bloodwind", "Peanuts", "Lots of Birds"
+  "Solar Eclipse", "Glitter", "Bloodwind", "Peanuts", "Lots of Birds",
+  "Feedback", "Reverb"
 ];
 
 function getWeather(game) {
