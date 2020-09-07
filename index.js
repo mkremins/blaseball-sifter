@@ -153,7 +153,7 @@ function getBasesState(game) {
 
 const allWeathers = [
   "Void", "Sunny", "Overcast", "Rainy", "Sandstorm", "Snowy", "Acidic",
-  "Solar Eclipse", "Glitter", "Bloodwind", "Peanuts", "Lots of Birds",
+  "Solar Eclipse", "Glitter", "Blooddrain", "Peanuts", "Lots of Birds",
   "Feedback", "Reverb"
 ];
 
