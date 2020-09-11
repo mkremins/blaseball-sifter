@@ -4,6 +4,22 @@ function randNth(items){
   return items[Math.floor(Math.random()*items.length)];
 }
 
+function partition(list, partitionSize) {
+  const partitions = [];
+  let currPartition = [];
+  for (let item of list) {
+    currPartition.push(item);
+    if (currPartition.length >= partitionSize) {
+      partitions.push(currPartition);
+      currPartition = [];
+    }
+  }
+  if (currPartition.length > 0) {
+    partitions.push(currPartition);
+  }
+  return partitions;
+}
+
 // from https://gist.github.com/andrei-m/982927
 // Compute the edit distance between the two given strings
 function getEditDistance(a, b){
@@ -45,4 +61,9 @@ function getNormalizedEditDistance(a, b) {
   return editDistance / Math.max(a.length, b.length);
 }
 
-module.exports = {randNth, getEditDistance, getNormalizedEditDistance};
+module.exports = {
+  randNth,
+  partition,
+  getEditDistance,
+  getNormalizedEditDistance
+};

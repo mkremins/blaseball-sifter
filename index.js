@@ -1,33 +1,10 @@
 const datascript = require('datascript');
-const request = require('request');
 const say = require('say');
 const tracery = require('tracery-grammar');
 
+const {getEndpoint} = require("./api");
+const database = require("./database");
 const {randNth, getNormalizedEditDistance} = require('./util');
-
-/// ad-hoc blaseball API
-
-const blaseballBaseURL = 'https://blaseball.com/database/';
-
-function getEndpoint(endpoint, params, cb) {
-  const paramsStr = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-  const url = `${blaseballBaseURL}/${endpoint}?${paramsStr}`;
-  //console.log(url);
-  request({url}, function(err, res, body) {
-    if (err) {
-      cb(null, err);
-    }
-    else {
-      try {
-        cb(JSON.parse(body));
-      }
-      catch (except) {
-        //console.log(except);
-        cb(null, except);
-      }
-    }
-  });
-}
 
 /// TTS stuff
 
@@ -126,8 +103,6 @@ function speakHighPriority(str) {
 }
 
 /// app
-
-const appDB = datascript.empty_db({});
 
 const cannedCommentaryGrammar = tracery.createGrammar(require('./grammars/cannedCommentaryGrammar.json'));
 const nickCommentaryGrammar = tracery.createGrammar(require('./grammars/nickCommentaryGrammar.json'));
@@ -487,6 +462,14 @@ function updateGameData() {
     }
 
     // otherwise assume we've got the game data and go ahead
+
+    // immediately dump all the game data we just got into the DB
+    // (this is bad for a lot of reasons but we're doing it for testing i guess!)
+    for (let game of games) {
+      database.pushEvent(game);
+    }
+
+    // now do all the other stuff
     const okToSwitch = secondsSinceLastSwitch > minSecondsBetweenSwitches;
     const mustSwitch = currentGameID === null || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
     const switchGame = mustSwitch || (okToSwitch && (Math.random() < chanceToSwitchPerSecond));
@@ -528,6 +511,24 @@ function updateGameData() {
   });
 }
 
+const siftingPatterns = [
+  {
+    name: "testPattern",
+    query: `[:find ?e1 ?e2 ?game :in $
+             :where [?e1 "eventType" "changeBatter"] [?e2 "eventType" "strike"]
+                    [?e1 "game" ?game] [?e2 "game" ?game]]`
+  }
+];
+
+function runSiftingPatterns() {
+  for (let pattern of siftingPatterns) {
+    const results = database.query(pattern.query);
+    if (results.length > 0) {
+      console.log(pattern.name, results);
+    }
+  }
+}
+
 function updateSimulationData() {
   getEndpoint('simulationData', {}, function(data, err) {
     if (err) {
@@ -541,8 +542,18 @@ function updateSimulationData() {
   });
 }
 
+getEndpoint("allTeams", {}, function(data, err) {
+  if (err) {
+    console.log("⚠️ can't get teams");
+    return;
+  }
+  console.log("Got teams! Populating DB...");
+  database.populateTeams(data);
+});
+
 // start up the loops and such
 updateSimulationData();
 setInterval(updateSimulationData, 1000 * 60);
 setInterval(updateGameData, updateRateSeconds * 1000);
 setInterval(pruneSpeechQueue, 20000);
+setInterval(runSiftingPatterns, 1000 * 60);
