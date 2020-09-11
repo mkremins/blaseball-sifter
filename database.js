@@ -214,6 +214,13 @@ function pushEvent(game) {
         game.incineratedName = match[2];
         game.replacementName = match[3];
       }
+      else if (outcome.endsWith("switched teams in the feedback!")) {
+        game.eventType.push("feedbackSwitch");
+        const regex = /^(.*) and (.*) switched teams in the feedback!$/;
+        const match = outcome.match(regex);
+        game.feedbackSwitchedName1 = match[1];
+        game.feedbackSwitchedName2 = match[2];
+      }
     }
   }
   previousGameStates[game.id] = game;
