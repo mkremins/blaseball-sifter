@@ -204,7 +204,7 @@ function pushEvent(game) {
   const prevGame = previousGameStates[game.id];
   const prevOutcomes = prevGame ? prevGame.outcomes : [];
   if (prevOutcomes.length < game.outcomes.length) {
-    for (let i = prevGame.outcomes.length - 1; i < game.outcomes.length; i++) {
+    for (let i = Math.max(prevOutcomes.length - 1, 0); i < game.outcomes.length; i++) {
       const outcome = game.outcomes[i];
       // classify the outcome
       if (outcome.startsWith("Rogue Umpire incinerated")) {

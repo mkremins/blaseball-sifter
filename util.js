@@ -1,5 +1,11 @@
 /// util
 
+// Given a list of items that may contain duplicates,
+// return an updated copy of the list without any duplicates.
+function distinct(items){
+  return items.filter((val, idx) => items.indexOf(val) === idx);
+}
+
 function randNth(items){
   return items[Math.floor(Math.random()*items.length)];
 }
@@ -62,6 +68,7 @@ function getNormalizedEditDistance(a, b) {
 }
 
 module.exports = {
+  distinct,
   randNth,
   partition,
   getEditDistance,

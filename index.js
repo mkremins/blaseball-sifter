@@ -4,6 +4,7 @@ const tracery = require('tracery-grammar');
 
 const {getEndpoint} = require("./api");
 const database = require("./database");
+const sifter = require("./sifter");
 const {randNth, getNormalizedEditDistance} = require('./util');
 
 /// TTS stuff
@@ -511,24 +512,6 @@ function updateGameData() {
   });
 }
 
-const siftingPatterns = [
-  {
-    name: "testPattern",
-    query: `[:find ?e1 ?e2 ?game :in $
-             :where [?e1 "eventType" "changeBatter"] [?e2 "eventType" "strike"]
-                    [?e1 "game" ?game] [?e2 "game" ?game]]`
-  }
-];
-
-function runSiftingPatterns() {
-  for (let pattern of siftingPatterns) {
-    const results = database.query(pattern.query);
-    if (results.length > 0) {
-      console.log(pattern.name, results);
-    }
-  }
-}
-
 function updateSimulationData() {
   getEndpoint('simulationData', {}, function(data, err) {
     if (err) {
@@ -556,4 +539,4 @@ updateSimulationData();
 setInterval(updateSimulationData, 1000 * 60);
 setInterval(updateGameData, updateRateSeconds * 1000);
 setInterval(pruneSpeechQueue, 20000);
-setInterval(runSiftingPatterns, 1000 * 60);
+setInterval(sifter.runSiftingPatterns, 1000 * 5);
