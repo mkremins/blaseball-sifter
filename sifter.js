@@ -121,7 +121,13 @@ const rawSiftingPatterns = [
     pattern: `[?e1 eventType changeBatter] [?e2 eventType strike]
               [?e1 game ?game] [?e2 game ?game]
               (< ?e1 ?e2)`
+  },
+  /*
+  {
+    name: "testPattern2",
+    pattern: `[?e1 eventType gameOver]`
   }
+  */
 ];
 
 const siftingPatterns = rawSiftingPatterns.map(({name, pattern}) => {

@@ -463,14 +463,6 @@ function updateGameData() {
     }
 
     // otherwise assume we've got the game data and go ahead
-
-    // immediately dump all the game data we just got into the DB
-    // (this is bad for a lot of reasons but we're doing it for testing i guess!)
-    for (let game of games) {
-      database.pushEvent(game);
-    }
-
-    // now do all the other stuff
     const okToSwitch = secondsSinceLastSwitch > minSecondsBetweenSwitches;
     const mustSwitch = currentGameID === null || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
     const switchGame = mustSwitch || (okToSwitch && (Math.random() < chanceToSwitchPerSecond));
@@ -482,21 +474,20 @@ function updateGameData() {
         possibleNextGames = possibleNextGames.filter(game => !game.gameComplete);
       }
       if (possibleNextGames.length > 1) {
-        possibleNextGames = possibleNextGames.filter(game => game._id !== currentGameID);
+        possibleNextGames = possibleNextGames.filter(game => game.id !== currentGameID);
       }
       secondsSinceLastSwitch = 0;
-      const possibleNextGameIDs = possibleNextGames.map(game => game._id);
+      const possibleNextGameIDs = possibleNextGames.map(game => game.id);
       currentGameID = randNth(possibleNextGameIDs);
     }
-    const game = games.find(game => game._id === currentGameID) || games[0];
+    const game = games.find(game => game.id === currentGameID) || games[0];
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
     if (switchGame) {
       const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
       speakHighPriority(`${prefix} ${title}.`);
     }
-    if (game.lastUpdate !== lastUpdates[game._id]) {
+    if (game.lastUpdate !== lastUpdates[game.id]) {
       speak(game.lastUpdate);
-      lastUpdates[game._id] = game.lastUpdate;
     }
     else {
       if (Math.random() < commentaryRate) {
@@ -507,6 +498,14 @@ function updateGameData() {
             console.log(err);
             speak("The Shard Is Watching");
          }
+      }
+    }
+
+    // push new updates to the database as events
+    for (let game of games) {
+      if (game.lastUpdate !== lastUpdates[game.id]) {
+        database.pushEvent(game);
+        lastUpdates[game.id] = game.lastUpdate;
       }
     }
   });
