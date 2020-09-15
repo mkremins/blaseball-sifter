@@ -177,6 +177,11 @@ function classifyEvent(game) {
       eventType: ["fieldersChoice", "otherOut", "out", "bad"],
       substring: "reaches on fielder's choice."
     },
+    {
+      // fielders got two outs b/c the hit was too easy, hitter usually out, but not necessarily
+      eventType: ["hitIntoDoublePlay", "otherOut", "out", "bad"],
+      substring: "hit into a double play!"}
+    {
     // ambiance (this is hilariously incomplete lmao)
     {eventType: ["ambianceBirds", "ambiance"], substring: "The birds continue to stare."},
     {eventType: ["ambianceBirds", "ambiance"], substring: "There's just too many birds!"},
