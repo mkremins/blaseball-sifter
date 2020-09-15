@@ -185,6 +185,14 @@ function classifyEvent(game) {
     // ambiance (this is hilariously incomplete lmao)
     {eventType: ["ambianceBirds", "ambiance"], substring: "The birds continue to stare."},
     {eventType: ["ambianceBirds", "ambiance"], substring: "There's just too many birds!"},
+    {eventType: ["ambianceBirds", "ambiance"], substring: "Have you ever seen this many birds?"},
+    {eventType: ["ambianceBirds", "ambiance"], substring: "Several birds are pecking..."},
+    {eventType: ["ambianceBirds", "ambiance"], substring: "The birds are after the children..."},
+    {
+      eventType: ["ambianceBirds", "ambiance"],
+      substring: "The Birds circle ... but they don't find what they're looking for."
+    },
+    {eventType: ["ambianceGods", "ambiance"], substring: "Oh dear Gods..."},
     {eventType: ["ambiancePlayBall", "ambiance"], substring: "Play ball!"}, // maybe lifecycle?
   ];
   for (let classifier of classifiers) {
