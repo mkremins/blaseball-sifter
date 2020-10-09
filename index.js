@@ -1,25 +1,5 @@
-const datascript = require('datascript');
-const say = require('say');
-const tracery = require('tracery-grammar');
-
-const {getEndpoint} = require("./api");
-const database = require("./database");
-const sifter = require("./sifter");
-const {randNth, getNormalizedEditDistance} = require('./util');
 
 /// TTS stuff
-
-let voiceToUse = null;
-if (process.platform === "darwin") {
-  voiceToUse = "Alex";
-}
-else if (process.platform === "win32") {
-  voiceToUse = "Microsoft Zira Desktop";
-}
-else { // probably we're on Linux then?
-  voiceToUse = "voice_cmu_us_slt_arctic_hts";
-}
-const voice = voiceToUse;
 
 function fixPronunciation(str) {
   if (!str) return ""; // fail gracefully if undefined
@@ -53,10 +33,16 @@ function logAndSay(str) {
   console.log(str);
   // varying the speed keeps the voice more interesting
   let voice_speed = 0.8 + (Math.random() * 0.5);
-  say.speak(fixPronunciation(str), voice, voice_speed, speakCallback);
+  sayDotSpeak(fixPronunciation(str)); //, voice, voice_speed, speakCallback);
   if (str !== "") {
     lastUtterance = str;
   }
+}
+
+function sayDotSpeak (text) {
+  let utterance = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(utterance);
+  utterance.onend = speakCallback;
 }
 
 let lastUtterance = "";
@@ -105,10 +91,10 @@ function speakHighPriority(str) {
 
 /// app
 
-const cannedCommentaryGrammar = tracery.createGrammar(require('./grammars/cannedCommentaryGrammar.json'));
-const nickCommentaryGrammar = tracery.createGrammar(require('./grammars/nickCommentaryGrammar.json'));
-const baalgameCommentaryGrammar = tracery.createGrammar(require('./grammars/baalgameCommentaryGrammar.json'));
-const blaseballadsGrammar = tracery.createGrammar(require('./grammars/blaseballadsGrammar.json'));
+const cannedCommentaryGrammar = tracery.createGrammar(cannedCommentary);
+const nickCommentaryGrammar = tracery.createGrammar(nickCommentary);
+const baalgameCommentaryGrammar = tracery.createGrammar(baalgameCommentary);
+const blaseballadsGrammar = tracery.createGrammar(blaseballads);
 
 function getCannedCommentary() {
   if (Math.random() < 0.5) {
@@ -504,7 +490,7 @@ function updateGameData() {
     // push new updates to the database as events
     for (let game of games) {
       if (game.lastUpdate !== lastUpdates[game.id]) {
-        database.pushEvent(game);
+        pushEvent(game);
         lastUpdates[game.id] = game.lastUpdate;
       }
     }
@@ -529,13 +515,15 @@ getEndpoint("allTeams", {}, function(data, err) {
     console.log("⚠️ can't get teams");
     return;
   }
-  console.log("Got teams! Populating DB...");
-  database.populateTeams(data);
+  console.log("Got teams! Populating DB...", data);
+  populateTeams(data);
 });
 
 // start up the loops and such
-updateSimulationData();
-setInterval(updateSimulationData, 1000 * 60);
-setInterval(updateGameData, updateRateSeconds * 1000);
-setInterval(pruneSpeechQueue, 20000);
-setInterval(sifter.runSiftingPatterns, 1000 * 5);
+start.onclick = () => {
+  updateSimulationData();
+  setInterval(updateSimulationData, 1000 * 60);
+  setInterval(updateGameData, updateRateSeconds * 1000);
+  setInterval(pruneSpeechQueue, 20000);
+  setInterval(runSiftingPatterns, 1000 * 5);
+}

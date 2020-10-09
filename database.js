@@ -1,7 +1,3 @@
-const datascript = require("datascript");
-
-const {getEndpoint} = require("./api");
-const {partition} = require("./util");
 
 /// database util functions
 
@@ -180,8 +176,8 @@ function classifyEvent(game) {
     {
       // fielders got two outs b/c the hit was too easy, hitter usually out, but not necessarily
       eventType: ["hitIntoDoublePlay", "otherOut", "out", "bad"],
-      substring: "hit into a double play!"}
-    {
+      substring: "hit into a double play!"
+    },
     // ambiance (this is hilariously incomplete lmao)
     {eventType: ["ambianceBirds", "ambiance"], substring: "The birds continue to stare."},
     {eventType: ["ambianceBirds", "ambiance"], substring: "There's just too many birds!"},
@@ -271,10 +267,3 @@ function getEntitiesByType(type) {
   }
   return entities;
 }
-
-module.exports = {
-  populateTeams,
-  pushEvent,
-  query,
-  getEntitiesByType,
-};

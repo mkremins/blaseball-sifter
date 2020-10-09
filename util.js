@@ -66,11 +66,3 @@ function getNormalizedEditDistance(a, b) {
   const editDistance = getEditDistance(a, b);
   return editDistance / Math.max(a.length, b.length);
 }
-
-module.exports = {
-  distinct,
-  randNth,
-  partition,
-  getEditDistance,
-  getNormalizedEditDistance
-};

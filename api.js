@@ -1,27 +1,19 @@
-const request = require("request");
 
-const blaseballBaseURL = "https://blaseball.com/database";
+const blaseballBaseURL = "https://cors-proxy.blaseball-reference.com/database"; // "https://blaseball.com/database";
 
 function getEndpoint(endpoint, params, cb) {
   const paramsStr = Object.keys(params).map(key => key + "=" + params[key]).join("&");
+
   const url = `${blaseballBaseURL}/${endpoint}?${paramsStr}`;
-  //console.log(url);
-  request({url}, function(err, res, body) {
-    if (err) {
-      cb(null, err);
-    }
-    else {
-      let parsed;
-      try {
-        parsed = JSON.parse(body);
-      }
-      catch (except) {
-        //console.log(except);
-        cb(null, except);
-      }
-      cb(parsed);
-    }
+  console.log("Fetching url:", url);
+  fetch(url, { headers:{'X-Requested-With': 'mkremins/blaseball-sifter'}})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Fetch success:', data);
+    cb(data)
+  })
+  .catch((error) => {
+    console.error('Fetch error:', error);
+    cb(null, error)
   });
 }
-
-module.exports = {getEndpoint};

@@ -1,5 +1,3 @@
-const database = require("./database");
-const {distinct} = require("./util");
 
 /// parse sifting patterns (lightly modified from Felt)
 
@@ -102,7 +100,7 @@ function runSiftingPattern(pattern) {
   if (!pattern.query || !pattern.lvars) {
     throw Error("Invalid sifting pattern!", pattern);
   }
-  const results = database.query(pattern.query);
+  const results = query(pattern.query);
   const nuggets = results.map(function(result) {
     let vars = {};
     for (let i = 0; i < pattern.lvars.length; i++) {
@@ -147,5 +145,3 @@ function runSiftingPatterns() {
     }
   }
 }
-
-module.exports = {runSiftingPatterns};
