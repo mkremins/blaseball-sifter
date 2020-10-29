@@ -31,6 +31,9 @@ function logAndSay(str) {
    }
   }
   console.log(str);
+  // log output to the webpage too
+  const outputDiv = document.getElementById("commentary");
+  outputDiv.innerText = str + "\n" + outputDiv.innerText;
   // varying the speed keeps the voice more interesting
   let voice_speed = 0.8 + (Math.random() * 0.5);
   sayDotSpeak(fixPronunciation(str)); //, voice, voice_speed, speakCallback);
