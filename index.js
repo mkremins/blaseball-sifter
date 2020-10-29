@@ -34,18 +34,14 @@ function logAndSay(str) {
   // log output to the webpage too
   const outputDiv = document.getElementById("commentary");
   outputDiv.innerText = str + "\n" + outputDiv.innerText;
-  // varying the speed keeps the voice more interesting
-  let voice_speed = 0.8 + (Math.random() * 0.5);
-  sayDotSpeak(fixPronunciation(str)); //, voice, voice_speed, speakCallback);
+  // actually pronounce the output
+  const pronounceableStr = fixPronunciation(str);
+  const utterance = new SpeechSynthesisUtterance(pronounceableStr);
+  speechSynthesis.speak(utterance);
+  utterance.onend = speakCallback;
   if (str !== "") {
     lastUtterance = str;
   }
-}
-
-function sayDotSpeak (text) {
-  let utterance = new SpeechSynthesisUtterance(text);
-  speechSynthesis.speak(utterance);
-  utterance.onend = speakCallback;
 }
 
 let lastUtterance = "";
