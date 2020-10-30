@@ -422,6 +422,7 @@ const maxSecondsBetweenSwitches = 120;//30
 const chanceToSwitchPerSecond = 1/30;
 const commentaryRate = 0.5;
 
+let currentTeamID = null;
 let secondsSinceLastSwitch = 0;
 let currentGameID = null;
 
@@ -448,6 +449,11 @@ function updateGameData() {
     }
 
     // otherwise assume we've got the game data and go ahead
+    const game = games.find(function(game) {
+      return game.awayTeam === currentTeamID || game.homeTeam === currentTeamID
+    }) || games[0];
+    currentGameID = game.id;
+    /*
     const okToSwitch = secondsSinceLastSwitch > minSecondsBetweenSwitches;
     const mustSwitch = currentGameID === null || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
     const switchGame = mustSwitch || (okToSwitch && (Math.random() < chanceToSwitchPerSecond));
@@ -466,11 +472,14 @@ function updateGameData() {
       currentGameID = randNth(possibleNextGameIDs);
     }
     const game = games.find(game => game.id === currentGameID) || games[0];
+    */
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
+    /*
     if (switchGame) {
       const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
       speakHighPriority(`${prefix} ${title}.`);
     }
+    */
     if (game.lastUpdate !== lastUpdates[game.id]) {
       speak(game.lastUpdate);
     }
@@ -516,10 +525,44 @@ getEndpoint("allTeams", {}, function(data, err) {
   }
   console.log("Got teams! Populating DB...", data);
   populateTeams(data);
+  // add team selection buttons to webpage
+  const teamButtons = document.getElementById("teamButtons");
+  const normalTeams = data.filter(team => team.card >= 0); // no ascended, suspended, etc
+  for (let team of normalTeams) {
+    // wrapper
+    const buttonWrapper = document.createElement("div");
+    buttonWrapper.classList.add("team-button-wrapper");
+    teamButtons.appendChild(buttonWrapper);
+    // actual button
+    const teamButton = document.createElement("button");
+    const moji = team.emoji;
+    const realmoji = isNaN(moji) ? moji : String.fromCodePoint(Number(moji));
+    teamButton.innerText = realmoji + team.fullName; // emoji broke lol
+    teamButton.onclick = function() {
+      currentTeamID = team.id;
+      startCommentary();
+    };
+    teamButton.style.borderColor = team.mainColor;
+    teamButton.style.color = team.mainColor;
+    buttonWrapper.appendChild(teamButton);
+  }
+  // and an extra button for when you're feeling lucky
+  // wrapper
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.classList.add("team-button-wrapper");
+  teamButtons.appendChild(buttonWrapper);
+  // actual button
+  const imFeelingLuckyButton = document.createElement("button");
+  imFeelingLuckyButton.innerText = "🎲 I'm Feeling Lucky";
+  imFeelingLuckyButton.onclick = function() {
+    currentTeamID = randNth(normalTeams.map(team => team.id));
+    startCommentary();
+  };
+  buttonWrapper.appendChild(imFeelingLuckyButton);
 });
 
 // start up the loops and such
-start.onclick = () => {
+function startCommentary() {
   updateSimulationData();
   setInterval(updateSimulationData, 1000 * 60);
   setInterval(updateGameData, updateRateSeconds * 1000);

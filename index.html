@@ -3,12 +3,61 @@
 <head>
   <meta charset="UTF-8">
 	<title>blaseball-sifter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+  * {
+    background: #111;
+    color: #eee;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  body {
+    font-family: "Lora","Courier New",monospace,serif;
+    margin: 0 auto;
+    max-width: 900px;
+  }
+  #teamButtons {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+  .team-button-wrapper {
+    width: 33.33%;
+  }
+  .team-button-wrapper button {
+    background: transparent;
+    border: 2px solid #eee;
+    border-radius: 0.5rem;
+    color: #eee;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.1rem;
+    height: 100%; /* you gotta, for make em all be same height reasons (see below) */
+    padding: 0.5rem;
+    width: 100%;
+  }
+  .team-button-wrapper button:hover {
+    background: #222;
+  }
+  .team-button-wrapper {
+    flex-grow: 1; /* make em all be same height even if text inside wraps weird */
+    padding: 5px;
+  }
+  </style>
 </head>
 <body>
   <main>
     <h1>blaseball-sifter</h1>
-    <button id="start">Start</button>
-    <div id="commentary"></div>
+    <p>inject the blaseball directly into my ears please yes thankyou</p>
+    <!--<button id="start">Start</button>-->
+    <div class="team-buttons-wrapper">
+      <h2>pick a team</h2>
+      <div id="teamButtons"></div>
+    </div>
+    <div class="commentary-wrapper">
+      <h2>commentary</h2>
+      <div id="commentary"></div>
+    </div>
   </main>
 
   <script src="lib/datascript-0.18.4.min.js"></script>
