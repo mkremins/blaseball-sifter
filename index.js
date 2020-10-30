@@ -417,13 +417,9 @@ function getCommentary(game) {
 }
 
 const updateRateSeconds = 1.1;
-const minSecondsBetweenSwitches = 60;//20
-const maxSecondsBetweenSwitches = 120;//30
-const chanceToSwitchPerSecond = 1/30;
 const commentaryRate = 0.5;
 
 let currentTeamID = null;
-let secondsSinceLastSwitch = 0;
 let currentGameID = null;
 
 let currentSeason = null;
@@ -432,7 +428,6 @@ let currentDay = null;
 const lastUpdates = {};
 
 function updateGameData() {
-  secondsSinceLastSwitch += updateRateSeconds;
   if ( currentSeason === null || currentDay === null) {
     console.log("⚠️ can't update game data: no current season or day");
     return;
@@ -441,7 +436,6 @@ function updateGameData() {
     // if there's an error, fail gracefully
     if (err) {
       // maybe reset switch state to force a switch to a new game when we go back online?
-      //secondsSinceLastSwitch = 0;
       //currentGameID = null;
       // for now, as a stopgap, say something random that doesn't depend on game state
       speak(getCannedCommentary());
@@ -452,34 +446,17 @@ function updateGameData() {
     const game = games.find(function(game) {
       return game.awayTeam === currentTeamID || game.homeTeam === currentTeamID
     }) || games[0];
+    const switchGame = game.id !== currentGameID;
     currentGameID = game.id;
-    /*
-    const okToSwitch = secondsSinceLastSwitch > minSecondsBetweenSwitches;
-    const mustSwitch = currentGameID === null || secondsSinceLastSwitch > maxSecondsBetweenSwitches;
-    const switchGame = mustSwitch || (okToSwitch && (Math.random() < chanceToSwitchPerSecond));
-    let possibleNextGames = games;
-    if (switchGame) {
-      console.log("SWITCHING TEAMS");
-      let possibleNextGames = games;
-      if (!games.every(game => game.gameComplete)) {
-        possibleNextGames = possibleNextGames.filter(game => !game.gameComplete);
-      }
-      if (possibleNextGames.length > 1) {
-        possibleNextGames = possibleNextGames.filter(game => game.id !== currentGameID);
-      }
-      secondsSinceLastSwitch = 0;
-      const possibleNextGameIDs = possibleNextGames.map(game => game.id);
-      currentGameID = randNth(possibleNextGameIDs);
-    }
-    const game = games.find(game => game.id === currentGameID) || games[0];
-    */
+
+    // announce game switch if any
     const title = `${game.awayTeamName} at ${game.homeTeamName}, ${game.awayScore} to ${game.homeScore}`;
-    /*
     if (switchGame) {
       const prefix = randNth(["We go now to the", "Now over to the", "Over to the", "Now back to the"]);
       speakHighPriority(`${prefix} ${title}.`);
     }
-    */
+
+    // queue game.lastUpdate if it's fresh, else queue some other commentary
     if (game.lastUpdate !== lastUpdates[game.id]) {
       speak(game.lastUpdate);
     }
@@ -562,7 +539,10 @@ getEndpoint("allTeams", {}, function(data, err) {
 });
 
 // start up the loops and such
+let commentaryStarted = false;
 function startCommentary() {
+  if (commentaryStarted) return;
+  commentaryStarted = true;
   updateSimulationData();
   setInterval(updateSimulationData, 1000 * 60);
   setInterval(updateGameData, updateRateSeconds * 1000);
